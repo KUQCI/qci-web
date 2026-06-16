@@ -4,9 +4,9 @@ import { useEffect, useRef, useState } from 'react';
 
 const BLOCH_CENTER = 360;
 const STATE_VECTOR_BASE_ANGLE =
-  (Math.atan2(280 - BLOCH_CENTER, 468 - BLOCH_CENTER) * 180) / Math.PI;
+  (Math.atan2(270 - BLOCH_CENTER, 480 - BLOCH_CENTER) * 180) / Math.PI;
 const STATE_VECTOR_ARROW_PATH =
-  'M358.9 358.6 L449.7 291.4 L444.5 284.4 L468 280 L457 301.2 L451.8 294.2 L361.1 361.4 Z';
+  'M358.9 358.6 L459 282 L454 275 L480 270 L467 292 L462 285 L361.1 361.4 Z';
 
 type SphereOrbital = {
   rx: number;
@@ -396,19 +396,19 @@ export default function PondHero() {
                   strokeLinejoin="round"
                 />
                 <motion.circle
-                  cx="468"
-                  cy="280"
+                  cx="480"
+                  cy="270"
                   r="3"
                   fill="none"
                   stroke="#f6c453"
-                  strokeWidth="1.2"
+                  strokeWidth="1.5"
                   filter="url(#softGoldGlow)"
                   animate={reduceMotion ? {} : { r: [3, 10, 3], opacity: [0, 0.45, 0] }}
                   transition={{ duration: 2.6, repeat: Infinity, ease: 'easeInOut' }}
                 />
                 <motion.circle
-                  cx="468"
-                  cy="280"
+                  cx="480"
+                  cy="270"
                   r="3"
                   fill="#f6c453"
                   filter="url(#softGoldGlow)"
@@ -442,31 +442,14 @@ export default function PondHero() {
                   repeatCount="indefinite"
                 />
               )}
-              <ellipse cx="360" cy="405" rx="68" ry="12" fill="#2f80ed" opacity="0.2" />
-              <path
-                d="M302 366 C310 338 343 324 383 331 C420 337 442 357 444 382 C416 397 355 405 310 390 C302 386 297 376 302 366Z"
-                fill="url(#duckDown)"
-                opacity="1"
-              />
-              <path
-                d="M397 337 C415 337 430 348 435 363 C426 376 405 380 390 369 C390 355 393 344 397 337Z"
-                fill="url(#duckDown)"
-                opacity="1"
-              />
-              <path
-                d="M405 328 C421 304 450 307 459 331 C446 347 423 350 405 338Z"
-                fill="url(#duckDown)"
-                opacity="1"
-              />
-              <path d="M458 325 L484 330 L457 337 Z" fill="#f0a72f" />
-              <circle cx="446" cy="327" r="3.4" fill="#050914" opacity="0.88" />
-              <path
-                d="M327 362 C348 349 378 350 405 365"
-                fill="none"
-                stroke="#9a6b16"
-                strokeOpacity="0.26"
-                strokeWidth="4"
-                strokeLinecap="round"
+              <ellipse cx="360" cy="415" rx="76" ry="14" fill="#2f80ed" opacity="0.2" />
+              <image
+                x="220"
+                y="200"
+                width="280"
+                height="260"
+                href="/Quanta version_1_backgroundless.png"
+                preserveAspectRatio="xMidYMid meet"
               />
             </g>
 
