@@ -25,7 +25,15 @@ const { project } = Astro.props;
       <h3 class="break-words text-xl font-semibold text-white">{project.name}</h3>
       <p class="mono-label mt-2 break-all text-xs text-cyan-quantum">{project.repo}</p>
     </div>
-    <span class="mono-label rounded-full border border-gold-duck/25 px-2.5 py-1 text-[0.65rem] uppercase text-gold-duck">
+    <span class:list={[
+      'mono-label rounded-full border px-2.5 py-1 text-[0.65rem] uppercase',
+      project.status === 'Planning' && 'border-gold-duck/25 text-gold-duck',
+      project.status === 'Prototyping' && 'border-purple-500/25 text-purple-400',
+      project.status === 'Active' && 'border-blue-qci/25 text-blue-qci',
+      project.status === 'Paused' && 'border-slate-500/25 text-slate-400',
+      project.status === 'Looking for Contributors' && 'border-cyan-quantum/25 text-cyan-quantum',
+      project.status === 'Completed' && 'border-green-500/25 text-green-400'
+    ]}>
       {project.status}
     </span>
   </div>

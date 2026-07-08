@@ -30,17 +30,7 @@ const tracks = [
   },
 ];
 
-const projectOrder = ['QML-Molecular-Atomization-Energy'];
-const projects = (await getCollection('projects')).sort((a, b) => {
-  const aIndex = projectOrder.indexOf(a.data.name);
-  const bIndex = projectOrder.indexOf(b.data.name);
-
-  if (aIndex !== -1 || bIndex !== -1) {
-    return (aIndex === -1 ? projectOrder.length : aIndex) - (bIndex === -1 ? projectOrder.length : bIndex);
-  }
-
-  return a.data.name.localeCompare(b.data.name);
-});
+const projects = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order);
 ---
 
 <!doctype html>

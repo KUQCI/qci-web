@@ -4,19 +4,19 @@ import SectionHeader from '../shared/SectionHeader.astro';
 
 const previews = [
   {
+    repo: 'KUQCI/quantum-learn',
+    status: 'completed',
+    copy: 'A production-ready quantum machine learning library with backend-agnostic APIs for Pennylane and Qiskit.'
+  },
+  {
     repo: 'KUQCI/QML-Molecular-Atomization-Energy',
-    status: 'planning',
+    status: 'prototyping',
     copy: 'Quantum machine learning for molecular atomization energy prediction with QM7.'
   },
   {
     repo: 'KUQCI/Quantum-Circuit-Visualizer',
-    status: 'planning',
+    status: 'prototyping',
     copy: 'A simplified tool for visualizing and analyzing quantum circuits.'
-  },
-  {
-    repo: 'KUQCI/Introduction-to-Practical-Quantum-Computing',
-    status: 'planning',
-    copy: 'A light introduction to applying quantum computing through software.'
   }
 ];
 ---
@@ -38,7 +38,12 @@ const previews = [
             <article class="h-full rounded-2xl border border-cyan-quantum/16 bg-surface/80 p-5 shadow-blue-glow">
               <div class="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-4">
                 <p class="mono-label min-w-0 break-all text-xs text-cyan-quantum sm:text-sm">{preview.repo}</p>
-                <span class="mono-label rounded-full border border-gold-duck/30 px-2.5 py-1 text-[0.65rem] uppercase text-gold-duck">
+                <span class:list={[
+                  'mono-label rounded-full border px-2.5 py-1 text-[0.65rem] uppercase',
+                  preview.status === 'completed' && 'border-green-500/30 text-green-400',
+                  preview.status === 'prototyping' && 'border-purple-500/30 text-purple-400',
+                  preview.status === 'planning' && 'border-gold-duck/30 text-gold-duck'
+                ]}>
                   {preview.status}
                 </span>
               </div>

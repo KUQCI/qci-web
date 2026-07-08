@@ -24,7 +24,8 @@ const projects = defineCollection({
   schema: z.object({
     name: z.string(),
     repo: z.string(),
-    status: z.enum(['Active', 'Prototype', 'Planning', 'Paused', 'Looking for Contributors']),
+    status: z.enum(['Active', 'Prototyping', 'Planning', 'Paused', 'Looking for Contributors', 'Completed']),
+    order: z.number(),
     difficulty: z.enum(['Beginner', 'Intermediate', 'Advanced', 'Intermediate-Advanced']),
     stack: z.array(z.string()),
     researchArea: z.string(),
