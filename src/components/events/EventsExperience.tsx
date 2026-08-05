@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import EventCalendar from './EventCalendar';
 import EventTimeline from './EventTimeline';
-import { eventMonthKey, monthKey, toLocalDate, type EventType, type SerializedEvent } from './types';
+import { toLocalDate, type EventType, type SerializedEvent } from './types';
 
 interface EventsExperienceProps {
   events: SerializedEvent[];
@@ -10,6 +10,15 @@ interface EventsExperienceProps {
 function monthStart(event: SerializedEvent) {
   const date = toLocalDate(event.date);
   return new Date(date.getFullYear(), date.getMonth(), 1);
+}
+
+function eventOverlapsMonth(event: SerializedEvent, month: Date) {
+  const monthStart = new Date(month.getFullYear(), month.getMonth(), 1);
+  const monthEnd = new Date(month.getFullYear(), month.getMonth() + 1, 0);
+  const eventStart = toLocalDate(event.date);
+  const eventEnd = event.endDate ? toLocalDate(event.endDate) : eventStart;
+
+  return eventStart <= monthEnd && eventEnd >= monthStart;
 }
 
 function sortEvents(events: SerializedEvent[]) {
@@ -60,8 +69,8 @@ export default function EventsExperience({ events }: EventsExperienceProps) {
   const changeMonth = (nextMonth: Date) => {
     const normalized = new Date(nextMonth.getFullYear(), nextMonth.getMonth(), 1);
     setVisibleMonth(normalized);
-    const selectedStillVisible = eventMonthKey(selectedEvent) === monthKey(normalized);
-    const firstInMonth = filteredEvents.find((event) => eventMonthKey(event) === monthKey(normalized));
+    const selectedStillVisible = eventOverlapsMonth(selectedEvent, normalized);
+    const firstInMonth = filteredEvents.find((event) => eventOverlapsMonth(event, normalized));
 
     if (!selectedStillVisible && firstInMonth) {
       setSelectedSlug(firstInMonth.slug);

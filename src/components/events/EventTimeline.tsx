@@ -9,6 +9,14 @@ interface EventTimelineProps {
   onPrevious: () => void;
 }
 
+function getStatusBadgeClass(status: SerializedEvent['status']) {
+  if (status === 'Upcoming') {
+    return 'border-emerald-400/35 bg-emerald-400/10 text-emerald-300';
+  }
+
+  return 'border-gold-duck/25 text-gold-duck';
+}
+
 export default function EventTimeline({
   events,
   selectedSlug,
@@ -19,9 +27,13 @@ export default function EventTimeline({
   const scrollerRef = useRef<HTMLDivElement>(null);
   const hasPositionedInitialCardRef = useRef(false);
   const selectedIndex = events.findIndex((event) => event.slug === selectedSlug);
-  const selectorStyle = {
+  const trackStyle = {
     '--event-card-width': 'min(42rem, calc(100vw - 3rem))',
+    '--event-card-gap': '5rem',
     '--event-track-pad': 'max(1rem, calc((100% - var(--event-card-width)) / 2))',
+    '--event-arrow-offset': 'max(0.75rem, calc((100% - var(--event-card-width)) / 2 - 3.75rem))'
+  } as CSSProperties;
+  const selectorStyle = {
     paddingInline: 'var(--event-track-pad)',
     scrollPaddingInline: 'var(--event-track-pad)'
   } as CSSProperties;
@@ -54,7 +66,7 @@ export default function EventTimeline({
   };
 
   return (
-    <section className="min-w-0 max-w-full" aria-label="Event timeline" onKeyDown={onKeyDown}>
+    <section className="min-w-0 max-w-full scroll-mt-32" aria-label="Event timeline" onKeyDown={onKeyDown}>
       <div className="mb-5 flex items-center justify-between gap-4">
         <div>
           <p className="mono-label text-xs uppercase text-cyan-quantum/75">timeline</p>
@@ -81,11 +93,29 @@ export default function EventTimeline({
       </div>
 
       <div>
-        <div className="relative max-w-full overflow-hidden" style={timelineMaskStyle}>
+        <div className="relative max-w-full overflow-hidden" style={{ ...trackStyle, ...timelineMaskStyle }}>
           <div className="absolute bottom-5 left-4 right-4 h-px bg-gradient-to-r from-transparent via-cyan-quantum/30 to-transparent" />
+          <button
+            type="button"
+            onClick={onPrevious}
+            className="absolute top-1/2 z-20 hidden h-10 w-10 -translate-y-1/2 place-items-center rounded-xl border border-cyan-quantum/20 bg-ink/88 text-slate-100 shadow-blue-glow backdrop-blur transition hover:border-gold-duck/50 hover:text-gold-duck lg:grid"
+            style={{ left: 'var(--event-arrow-offset)' }}
+            aria-label="Select previous event"
+          >
+            <span aria-hidden="true">&lt;</span>
+          </button>
+          <button
+            type="button"
+            onClick={onNext}
+            className="absolute top-1/2 z-20 hidden h-10 w-10 -translate-y-1/2 place-items-center rounded-xl border border-cyan-quantum/20 bg-ink/88 text-slate-100 shadow-blue-glow backdrop-blur transition hover:border-gold-duck/50 hover:text-gold-duck lg:grid"
+            style={{ right: 'var(--event-arrow-offset)' }}
+            aria-label="Select next event"
+          >
+            <span aria-hidden="true">&gt;</span>
+          </button>
           <div
             ref={scrollerRef}
-            className="no-scrollbar relative flex w-full max-w-full snap-x gap-4 overflow-x-auto overscroll-x-contain pb-12 scroll-smooth"
+            className="no-scrollbar relative flex w-full max-w-full snap-x gap-[var(--event-card-gap)] overflow-x-auto overscroll-x-contain pb-12 scroll-smooth"
             style={selectorStyle}
             tabIndex={0}
             aria-label="Event timeline selector"
@@ -93,6 +123,7 @@ export default function EventTimeline({
             {events.map((event, index) => {
               const selected = event.slug === selectedSlug;
               const past = isPastEvent(event);
+              const eventTime = formatEventTime(event);
               const distance = selectedIndex === -1 ? 0 : Math.abs(index - selectedIndex);
               const inactiveState =
                 distance === 1
@@ -104,7 +135,7 @@ export default function EventTimeline({
                   key={event.slug}
                   data-event-card={event.slug}
                   className={[
-                    'relative min-h-[27rem] w-[var(--event-card-width)] shrink-0 snap-center rounded-2xl border bg-gradient-to-br p-5 text-left transition duration-300 ease-out sm:p-6',
+                    'relative min-h-[27rem] w-[var(--event-card-width)] shrink-0 snap-center rounded-2xl border bg-gradient-to-br p-5 text-left scroll-mt-32 transition duration-300 ease-out sm:p-6',
                     selected
                       ? 'z-10 scale-100 border-gold-duck/55 from-surface-2 to-ink opacity-100 shadow-gold-glow'
                       : `border-cyan-quantum/14 from-surface/80 to-ink/70 ${inactiveState} hover:border-cyan-quantum/35 hover:opacity-75 hover:blur-none`,
@@ -117,7 +148,12 @@ export default function EventTimeline({
                       <span className="mono-label rounded-full border border-blue-qci/35 px-2.5 py-1 text-xs uppercase text-cyan-quantum">
                         {event.type}
                       </span>
-                      <span className="mono-label rounded-full border border-gold-duck/25 px-2.5 py-1 text-xs uppercase text-gold-duck">
+                      <span
+                        className={[
+                          'mono-label rounded-full border px-2.5 py-1 text-xs uppercase',
+                          getStatusBadgeClass(event.status)
+                        ].join(' ')}
+                      >
                         {event.status}
                       </span>
                       {event.difficulty && (
@@ -143,10 +179,12 @@ export default function EventTimeline({
                       <dt className="text-slate-500">Date</dt>
                       <dd className="text-right">{formatEventDate(event.date, event.endDate)}</dd>
                     </div>
-                    <div className="flex justify-between gap-4 border-t border-cyan-quantum/10 pt-3">
-                      <dt className="text-slate-500">Time</dt>
-                      <dd className="min-w-0 break-words text-right">{formatEventTime(event)}</dd>
-                    </div>
+                    {eventTime && (
+                      <div className="flex justify-between gap-4 border-t border-cyan-quantum/10 pt-3">
+                        <dt className="text-slate-500">Time</dt>
+                        <dd className="min-w-0 break-words text-right">{eventTime}</dd>
+                      </div>
+                    )}
                     <div className="flex justify-between gap-4 border-t border-cyan-quantum/10 pt-3">
                       <dt className="text-slate-500">Location</dt>
                       <dd className="min-w-0 break-words text-right">{event.location}</dd>
@@ -172,16 +210,9 @@ export default function EventTimeline({
                       </a>
                     ) : (
                       <span className="inline-flex justify-center rounded-2xl border border-slate-700 px-5 py-3 text-sm font-semibold text-slate-400">
-                        Registration unavailable
+                        {past ? 'Registration unavailable' : 'Registration upcoming'}
                       </span>
                     )}
-                    <button
-                      type="button"
-                      className="inline-flex justify-center rounded-2xl border border-cyan-quantum/30 px-5 py-3 text-sm font-semibold text-cyan-quantum transition hover:border-gold-duck/50 hover:text-gold-duck"
-                      aria-label={`Add ${event.title} to calendar`}
-                    >
-                      Add to calendar
-                    </button>
                   </div>
                   <span
                     className={[

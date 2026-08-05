@@ -1,8 +1,7 @@
 import {
-  eventMonthKey,
   formatMonth,
   isPastEvent,
-  monthKey,
+  toLocalDate,
   type SerializedEvent
 } from './types';
 
@@ -32,8 +31,32 @@ function getCalendarCells(month: Date) {
   });
 }
 
+function toDateKey(date: Date) {
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(
+    2,
+    '0'
+  )}`;
+}
+
+function getEventEndDate(event: SerializedEvent) {
+  return event.endDate ? toLocalDate(event.endDate) : toLocalDate(event.date);
+}
+
 function eventOccursOnDate(event: SerializedEvent, dateKey: string) {
-  return event.date === dateKey || event.endDate === dateKey;
+  const date = toLocalDate(dateKey);
+  const start = toLocalDate(event.date);
+  const end = getEventEndDate(event);
+
+  return date >= start && date <= end;
+}
+
+function eventOverlapsMonth(event: SerializedEvent, month: Date) {
+  const monthStart = new Date(month.getFullYear(), month.getMonth(), 1);
+  const monthEnd = new Date(month.getFullYear(), month.getMonth() + 1, 0);
+  const eventStart = toLocalDate(event.date);
+  const eventEnd = getEventEndDate(event);
+
+  return eventStart <= monthEnd && eventEnd >= monthStart;
 }
 
 export default function EventCalendar({
@@ -43,8 +66,7 @@ export default function EventCalendar({
   onMonthChange,
   onSelect
 }: EventCalendarProps) {
-  const monthEvents = events.filter((event) => eventMonthKey(event) === monthKey(visibleMonth));
-  const selectedDate = selectedEvent.date;
+  const monthEvents = events.filter((event) => eventOverlapsMonth(event, visibleMonth));
   const cells = getCalendarCells(visibleMonth);
 
   return (
@@ -81,12 +103,10 @@ export default function EventCalendar({
           </div>
         ))}
         {cells.map((cell) => {
-          const dateKey = `${cell.getFullYear()}-${String(cell.getMonth() + 1).padStart(2, '0')}-${String(
-            cell.getDate()
-          ).padStart(2, '0')}`;
+          const dateKey = toDateKey(cell);
           const dayEvents = monthEvents.filter((event) => eventOccursOnDate(event, dateKey));
           const inMonth = cell.getMonth() === visibleMonth.getMonth();
-          const selected = selectedDate === dateKey || selectedEvent.endDate === dateKey;
+          const selected = eventOccursOnDate(selectedEvent, dateKey);
 
           if (dayEvents.length === 0) {
             return (

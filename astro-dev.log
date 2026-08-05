@@ -1,0 +1,27 @@
+
+> qci-web@0.1.0 dev
+> astro dev --host localhost
+
+[2m07:22:07[22m [34m[types][39m Generated [2m1ms[22m
+[2m07:22:07[22m [34m[content][39m Syncing content
+[2m07:22:07[22m [34m[content][39m Astro config changed
+[2m07:22:07[22m [34m[content][39m Clearing content store
+[2m07:22:07[22m [34m[content][39m Synced content
+[2m07:22:07[22m [34m[vite][39m Re-optimizing dependencies because vite config has changed
+
+[42m[1m astro [22m[49m [32mv5.18.1[39m [2mready in[22m 727 [2mms[22m
+
+[2m┃[22m Local    [36mhttp://localhost:4321/[39m
+
+[2m07:22:07[22m [32mwatching for file changes...[39m
+[2m07:23:00[22m [34m[200][39m /events/ [2m1272ms[22m
+[2m07:26:54[22m [34m[200][39m /events/ [2m307ms[22m
+[2m07:31:15[22m [34m[200][39m /events/ [2m304ms[22m
+[2m07:32:44[22m [34m[glob-loader][39m Reloaded data from [32mqiskit-fall-fest-2026.mdx[39m
+[2m07:34:47[22m [34m[glob-loader][39m Reloaded data from [32mquantum-hackathon.mdx[39m
+[2m07:34:49[22m [34m[glob-loader][39m Reloaded data from [32mqiskit-fall-fest-2026.mdx[39m
+[2m07:38:50[22m [34m[glob-loader][39m Reloaded data from [32mquantum-hackathon.mdx[39m
+[2m07:38:51[22m [34m[glob-loader][39m Reloaded data from [32mqiskit-fall-fest-2026.mdx[39m
+[2m07:43:52[22m [34m[glob-loader][39m Reloaded data from [32mquantum-hackathon.mdx[39m
+[2m07:45:45[22m [34m[glob-loader][39m Reloaded data from [32mquantum-hackathon.mdx[39m
+[2m07:47:27[22m [34m[glob-loader][39m Reloaded data from [32mquantum-hackathon.mdx[39m

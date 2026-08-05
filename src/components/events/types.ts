@@ -1,6 +1,6 @@
-export type EventType = 'Workshop' | 'Hackathon' | 'Talk' | 'Bootcamp' | 'Showcase';
+export type EventType = 'Workshop' | 'Hackathon' | 'Talk' | 'Bootcamp' | 'Showcase' | 'Festival';
 export type EventStatus = 'Upcoming' | 'Past' | 'Registration Open' | 'In Progress';
-export type EventDifficulty = 'Beginner' | 'Intermediate' | 'Advanced';
+export type EventDifficulty = 'Beginner' | 'Intermediate' | 'Advanced' | 'Beginner to Advanced';
 
 export interface SerializedEvent {
   slug: string;
@@ -8,7 +8,7 @@ export interface SerializedEvent {
   type: EventType;
   date: string;
   endDate?: string;
-  startTime: string;
+  startTime?: string;
   endTime?: string;
   timeLabel?: string;
   location: string;
@@ -57,7 +57,7 @@ export function formatEventDate(date: string, endDate?: string) {
     year: 'numeric'
   }).format(end);
 
-  return `${formattedStart} – ${formattedEnd}`;
+  return `${formattedStart} - ${formattedEnd}`;
 }
 
 export function formatMonth(date: Date) {
@@ -72,11 +72,15 @@ export function formatEventTime(event: SerializedEvent) {
     return event.timeLabel;
   }
 
+  if (!event.startTime) {
+    return undefined;
+  }
+
   return event.endTime ? `${event.startTime} - ${event.endTime}` : event.startTime;
 }
 
 export function isPastEvent(event: SerializedEvent) {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
-  return event.status === 'Past' || toLocalDate(event.date) < today;
+  return event.status === 'Past' || toLocalDate(event.endDate ?? event.date) < today;
 }

@@ -4,8 +4,17 @@ interface EventDetailsProps {
   event: SerializedEvent;
 }
 
+function getStatusBadgeClass(status: SerializedEvent['status']) {
+  if (status === 'Upcoming') {
+    return 'border-emerald-400/35 bg-emerald-400/10 text-emerald-300';
+  }
+
+  return 'border-gold-duck/25 text-gold-duck';
+}
+
 export default function EventDetails({ event }: EventDetailsProps) {
   const past = isPastEvent(event);
+  const eventTime = formatEventTime(event);
 
   return (
     <aside className="min-w-0 max-w-full rounded-2xl border border-gold-duck/20 bg-gradient-to-br from-surface-2 to-ink p-5 shadow-gold-glow sm:p-6">
@@ -13,7 +22,12 @@ export default function EventDetails({ event }: EventDetailsProps) {
         <span className="mono-label rounded-full border border-blue-qci/35 px-2.5 py-1 text-xs uppercase text-cyan-quantum">
           {event.type}
         </span>
-        <span className="mono-label rounded-full border border-gold-duck/25 px-2.5 py-1 text-xs uppercase text-gold-duck">
+        <span
+          className={[
+            'mono-label rounded-full border px-2.5 py-1 text-xs uppercase',
+            getStatusBadgeClass(event.status)
+          ].join(' ')}
+        >
           {event.status}
         </span>
         {event.difficulty && (
@@ -29,10 +43,12 @@ export default function EventDetails({ event }: EventDetailsProps) {
           <dt className="text-slate-500">Date</dt>
           <dd className="text-right">{formatEventDate(event.date, event.endDate)}</dd>
         </div>
-        <div className="flex justify-between gap-4 border-t border-cyan-quantum/10 pt-3">
-          <dt className="text-slate-500">Time</dt>
-          <dd className="min-w-0 break-words text-right">{formatEventTime(event)}</dd>
-        </div>
+        {eventTime && (
+          <div className="flex justify-between gap-4 border-t border-cyan-quantum/10 pt-3">
+            <dt className="text-slate-500">Time</dt>
+            <dd className="min-w-0 break-words text-right">{eventTime}</dd>
+          </div>
+        )}
         <div className="flex justify-between gap-4 border-t border-cyan-quantum/10 pt-3">
           <dt className="text-slate-500">Location</dt>
           <dd className="min-w-0 break-words text-right">{event.location}</dd>
@@ -61,16 +77,9 @@ export default function EventDetails({ event }: EventDetailsProps) {
           </a>
         ) : (
           <span className="inline-flex justify-center rounded-2xl border border-slate-700 px-5 py-3 text-sm font-semibold text-slate-400">
-            Registration unavailable
+            {past ? 'Registration unavailable' : 'Registration upcoming'}
           </span>
         )}
-        <button
-          type="button"
-          className="inline-flex justify-center rounded-2xl border border-cyan-quantum/30 px-5 py-3 text-sm font-semibold text-cyan-quantum transition hover:border-gold-duck/50 hover:text-gold-duck"
-          aria-label={`Add ${event.title} to calendar`}
-        >
-          Add to calendar
-        </button>
       </div>
     </aside>
   );
