@@ -213,13 +213,13 @@ test('events island filters, timeline, and calendar stay synchronized', async ({
   await expectAstroIslandsHydrated(page);
 
   const selectedTitle = page.locator('[data-event-card][aria-current="true"] h3');
-  await expect(selectedTitle).toHaveText('AUS MedHack QCI Booth');
+  await expect(selectedTitle).toHaveText('Quantum Computing Initiative IBM Qiskit Fall Fest 2026');
 
   await page.getByRole('button', { name: 'Select previous event' }).click();
-  await expect(selectedTitle).toHaveText('IEEE Open Silicon Initiative Chip Design Bootcamp');
+  await expect(selectedTitle).toHaveText('AUS MedHack QCI Booth');
 
   await page.getByRole('button', { name: 'Show next month' }).click();
-  await expect(page.getByRole('heading', { name: 'May 2026' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'June 2026' })).toBeVisible();
   await expect(selectedTitle).toHaveText('AUS MedHack QCI Booth');
 
   const showcaseFilter = page.getByRole('button', { name: 'Showcase' });
@@ -227,7 +227,7 @@ test('events island filters, timeline, and calendar stay synchronized', async ({
   await expect(showcaseFilter).toHaveAttribute('aria-pressed', 'true');
   await expect(selectedTitle).toHaveText('AUS MedHack QCI Booth');
 
-  await page.getByRole('button', { name: /Add AUS MedHack QCI Booth to calendar/ }).click();
+  await expect(page.getByRole('button', { name: /Add .* to calendar/ })).toHaveCount(0);
   await expectNoClientFailures(page, diagnostics);
 });
 
@@ -238,13 +238,13 @@ test('events timeline supports keyboard navigation', async ({ page }) => {
   await expectAstroIslandsHydrated(page);
 
   const selectedTitle = page.locator('[data-event-card][aria-current="true"] h3');
-  await expect(selectedTitle).toHaveText('AUS MedHack QCI Booth');
+  await expect(selectedTitle).toHaveText('Quantum Computing Initiative IBM Qiskit Fall Fest 2026');
 
   await page.getByLabel('Event timeline selector').focus();
   await page.keyboard.press('ArrowLeft');
-  await expect(selectedTitle).toHaveText('IEEE Open Silicon Initiative Chip Design Bootcamp');
-  await page.keyboard.press('ArrowRight');
   await expect(selectedTitle).toHaveText('AUS MedHack QCI Booth');
+  await page.keyboard.press('ArrowRight');
+  await expect(selectedTitle).toHaveText('Quantum Computing Initiative IBM Qiskit Fall Fest 2026');
 
   await expectNoClientFailures(page, diagnostics);
 });

@@ -100,7 +100,7 @@ export default function EventTimeline({
             onClick={onPrevious}
             className="absolute top-1/2 z-20 hidden h-10 w-10 -translate-y-1/2 place-items-center rounded-xl border border-cyan-quantum/20 bg-ink/88 text-slate-100 shadow-blue-glow backdrop-blur transition hover:border-gold-duck/50 hover:text-gold-duck lg:grid"
             style={{ left: 'var(--event-arrow-offset)' }}
-            aria-label="Select previous event"
+            aria-label="Previous event"
           >
             <span aria-hidden="true">&lt;</span>
           </button>
@@ -109,7 +109,7 @@ export default function EventTimeline({
             onClick={onNext}
             className="absolute top-1/2 z-20 hidden h-10 w-10 -translate-y-1/2 place-items-center rounded-xl border border-cyan-quantum/20 bg-ink/88 text-slate-100 shadow-blue-glow backdrop-blur transition hover:border-gold-duck/50 hover:text-gold-duck lg:grid"
             style={{ right: 'var(--event-arrow-offset)' }}
-            aria-label="Select next event"
+            aria-label="Next event"
           >
             <span aria-hidden="true">&gt;</span>
           </button>
